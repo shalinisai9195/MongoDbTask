@@ -1,0 +1,106 @@
+To create DataBase Product 
+----------------------------------------------
+use product
+
+To create table into the "product" DB
+-------------------------------------------------
+1) db.productinfo.insertOne({id:1,prod_name:"T-shirt",prod_meterial:"velvet",color:"blue",price:400})
+
+2)  db.productinfo.insertMany([{id:1,prod_name:"T-shirt",prod_meterial:"velvet",color:"blue",price:400},{id:2,prod_name:"jacket",prod_meterial:"chiffon",color:"white",price:500},
+   {id:3,prod_name:"sweater",prod_meterial:"denim",color:"green",price:300},{id:4,prod_name:"jeans",prod_meterial:"cotton",color:"white",price:300},
+   {id:5,prod_name:"skirt",prod_meterial:"soft",color:"indigo",price:200},{id:6,prod_name:"coat",prod_meterial:"organza",color:"black",price:800},
+   {id:7,prod_name:"pyjamas",prod_meterial:"cotton",color:"red",price:150},{id:8,prod_name:"shirt",prod_meterial:"velvet",color:"indigo",price:250},
+   {id:9,prod_name:"T-shirt",prod_meterial:"soft",color:"yellow",price:200},{id:10,prod_name:"shirt",prod_meterial:"velvet",color:"indigo",price:300}])
+
+> productinfo is a document collection and we inserting a new data (one or many) using inser method.
+
+Task Question and qurey 
+---------------------------------------
+
+1. Find all the information about each products.
+
+ Ans: db.productinfo.find()
+ 
+Hint: To get the count of the data use below line
+         db.productinfo.find().count()
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+2.Find the product price which are between 400 to 800.
+
+Ans: db.productinfo.find({$and:[{price:{$gte:400}},{price:{$lte:800}}]})
+
+This will return between the price of (400 - 800) include with 400 & 800 as well.
+
+        db.productinfo.find({$and:[{price:{$gt:400}},{price:{$lt:800}}]})
+
+This will return between the price of (400 - 800), but not include 400,800.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+3.Find the product price which are not between 400 to 600.
+
+Ans: db.productinfo.find({price: {$not: {$gt:400,$lt:600}}});
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+4.List the four product which are grater than 500 in price. 
+
+Ans: db.productinfo.find({price:{$gt:500}}).limit(4)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+5.Find the product name and product material of each products
+
+Ans: db.productinfo.find({},{prod_name:1,prod_meterial:1})
+
+ wrapped into the array 
+--------------------------------------
+      db.productinfo.find({},{prod_name:1,prod_meterial:1}).toArray()
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+6.Find the product with a row id of 10.
+
+Ans: db.productinfo.find({id:10})
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+7.Find only the product name and product material.
+
+Ans: db.productinfo.find({},{prod_name:1,prod_meterial:1,_id:0}) -- For All product.
+                               
+        db.productinfo.findOne({},{prod_name:1,prod_meterial:1,_id:0}) -- For first one of the list.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+8.Find all products which contain the value of soft in product material 
+
+Ans: db.productinfo.find({prod_meterial:"soft"})
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+9.Find products which contain product color indigo  and product price 492.00
+
+Ans:  db.productinfo.find({$or:[{color:{$eq:"indigo"}},{price:{$eq:492}}]})
+                                             (or)
+         db.productinfo.find({$or:[{color:"indigo"},{price:492}]})
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+10.Delete the products which product price value are same
+
+Ans:  
+ 
+~~~~~~~~~~~~~~~~~~~~~~~~x~~~~x~~~~x~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+
+
+
+
+
+
