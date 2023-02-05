@@ -1,0 +1,78 @@
+
+Create ZenDB - use ZenDB
+
+Create Collection 
+----------------------------
+
+Mentors
+***********
+db.mentordetailes.insertMany([{mentorId:12,mentorname:"Varun",email:"varun@gmail.com",mobile:"905876732",mentees_count:15,subject:"HTML & CSS and sql"},
+                           {mentorId:13,mentorname:"megha",email:"meghan@gmail.com",mobile:"998875631",mentees_count:18,subject:"Javascript and HTML& CSS, SQl"},
+                           {mentorId:14,mentorname:"chris",email:"chris@outlook.com",mobile:"9984023678",mentees_count:16,subject:"Full_stack"},
+                           {mentorId:11,mentorname:"Sangeetha",email:"sangee@gmail.com",mobile:"909875632",mentees_count:12,subject:"Javascript and HTML& CSS"}])
+Codekata
+*************
+db.codekata.insertMany([{userstatus:[{userId:102,count_resolved:25},{userId:101,count_resolved:35}],problem_type:"Absolute Beginner",total_problems:40},
+                          {userstatus:[{userId:120,count_resolved:30},{userId:101,count_resolved:26}],problem_type:"string",total_problems:30},
+                          {userstatus:[{userId:231,count_resolved:30},{userId:105,count_resolved:26}],problem_type:"Array",total_problems:50},
+                          {userstatus:[{userId:101,count_resolved:30},{userId:110,count_resolved:26}],problem_type:"Input/output",total_problems:30}])
+
+companydrive
+******************
+db.company_drive.insertMany([{company_name:"Cognizant",date_visit:"20/10/2022",student_attend:[{name:"Dallas",result:"selected"}]},
+{company_name:"Zoho",date_visit:"18/10/2022",student_attend:[{name:"john",result:"selected"},{name:"mary",result:"selected"}]},
+{company_name:"TCS",date_visit:"15/10/2022",student_attend:[{name:"kaleesh",result:"selected"},{name:"ken",result:"not selected"}]}])
+
+attendance
+***************
+db.attendance.insertMany({userId:101,date:"18/10/2022",attendance_status:"absent"},
+                      {userId:102,date:"18/10/2022",attendance_status:"absent"},
+                      {userId:101,date:"15/10/2022",attendance_status:"present"})
+
+similarly created rest of needed collections like (task,topics,studendetailes).
+
+
+
+1) Find all the topics and tasks which are thought in the month of October
+ 
+Ans: db.topics.aggregate([
+           {
+               '$lookup': {
+               'from': 'task', 
+               'localField': 'month_teach', 
+               'foreignField': 'task_given_month', 
+               'as': 'topic and task'
+           }
+       } ]) 
+-----------------------------------------------------------------------------------------
+
+2) Find all the company drives which appeared between 15 oct-2020 and 31-oct-2020
+
+Ans: db.comp_drive.find({$and:[{date_visit:{$gt:"15/10/2022"}},
+       {date_visit:{$lt:"31/10/2022"}}]})
+
+-----------------------------------------------------------------------------------------
+
+3) Find all the company drives and students who are appeared for the placement.
+
+Ans: db.comp_drive.find({},{company_name:1,student_attend:1})
+
+-----------------------------------------------------------------------------------------
+
+4) Find the number of problems solved by the user in codekata
+
+ Ans: db.codekata.find({},{problem_type:1,userstatus:1,total_problems:1}).pretty()
+
+-----------------------------------------------------------------------------------------
+
+5) Find all the mentors with who has the mentee's count more than 15
+
+Ans: db.mentordetailes.find({mentees_count:{$gt:15}},{mentorname:1,subject:1,mentees_count:1,_id:0}).pretty()
+
+-----------------------------------------------------------------------------------------
+
+6) Find the number of users who are absent and task is not submitted  between 15 oct-2020 and 31-oct-2020
+
+Ans: db.attendance.find({attendance_status:"absent"}).count()
+
+       db.task.find({$and:[{date:{$gt:"15/10/2022"}},{date:{$lt:"31/10/2022"}}]},{task_submit:false}).count()
